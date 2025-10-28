@@ -122,26 +122,39 @@ class Vehicle(db.Model):
 class Policy(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     # risk_type
+    risk_type: so.Mapped[RiskType] = so.mapped_column(sa.Enum(RiskType), nullable=False)
     # usage_type
-    # coverage_type
-    # transaction_type
-    # transaction_branch
-    start_date: so.Mapped[datetime.date] = so.mapped_column(
-        sa.Date, default=datetime.date.today()
+    usage_type: so.Mapped[UsageType] = so.mapped_column(
+        sa.Enum(UsageType), nullable=False
     )
+    # coverage_type
+    coverage_type: so.Mapped[CoverageType] = so.mapped_column(
+        sa.Enum(CoverageType), nullable=False
+    )
+    # transaction_type
+    transaction_type: so.Mapped[TransactionType] = so.mapped_column(
+        sa.Enum(TransactionType), nullable=False
+    )
+    # transaction_branch
+    transaction_branch: so.Mapped[TransactionBranch] = so.mapped_column(
+        sa.Enum(TransactionBranch), nullable=False
+    )
+
+    start_date: so.Mapped[datetime.date] = so.mapped_column(
+        sa.Date, default=lambda: datetime.date.today()
+    )
+
+    cover_period: so.Mapped[int] = so.mapped_column(sa.Integer, default=365)
     end_date: so.Mapped[datetime.date] = so.mapped_column(
-        sa.Date, default=datetime.date.today() + datetime.timedelta(days=365)
+        sa.Date,
+        default=lambda: datetime.date.today()
+        + datetime.timedelta(days=Policy.cover_period),
     )
     premium: so.Mapped[float] = so.mapped_column(sa.Float, default=0.0)
     status: so.Mapped[PolicyStatus] = so.mapped_column(
         sa.Enum(PolicyStatus), default=PolicyStatus.ACTIVE
     )
-    # participant_id: so.Mapped[int] = so.mapped_column(
-    #     sa.ForeignKey("participant.id"), nullable=False
-    # )
-    # participant: so.Mapped[Participant] = so.relationship(
-    #     "Participant", back_populates="policies"
-    # )
+
     vehicle_id: so.Mapped[int] = so.mapped_column(
         sa.ForeignKey(Vehicle.id), nullable=False
     )
