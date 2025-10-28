@@ -1,4 +1,5 @@
 from typing import Optional
+from werkzeug.security import generate_password_hash, check_password_hash
 import enum
 import sqlalchemy as sa
 import sqlalchemy.orm as so
@@ -76,6 +77,12 @@ class User(db.Model):
     policies: so.WriteOnlyMapped["Policy"] = so.relationship(
         back_populates="created_by"
     )
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
         return f"<User {self.username}>"
