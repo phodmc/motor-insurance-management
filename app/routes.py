@@ -63,8 +63,21 @@ def logout():
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
-    form = SignupForm()
-    if form.validate_on_submit():
-        flash(f"login requested for user {form.username.data}")
+    if current_user.is_authenticated:
         return redirect(url_for("index"))
+
+    form = SignupForm()
+
+    if form.validate_on_submit():
+        user = User(
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+            username=form.username.data,
+            email=form.email.data,
+        )
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash("User registration successful!")
+        return redirect(url_for("login"))
     return render_template("signup.html", title="Sign Up", form=form)
