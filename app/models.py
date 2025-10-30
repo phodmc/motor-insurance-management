@@ -1,11 +1,16 @@
 from typing import Optional
 from werkzeug.security import generate_password_hash, check_password_hash
 import enum
+from flask_login import UserMixin
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from app import db
-
+from app import db, login
 from datetime import datetime, timezone
+
+
+@login.user_loader
+def load_user(id):
+    return db.session.get(User, int(id))
 
 
 class UserType(enum.Enum):
@@ -64,7 +69,7 @@ class TransactionBranch(enum.Enum):
     COASTAL_ROAD = "coastal_road"
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     first_name: so.Mapped[str] = so.mapped_column(sa.String(32), index=True)
     last_name: so.Mapped[str] = so.mapped_column(sa.String(32), index=True)
