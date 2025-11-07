@@ -1,5 +1,6 @@
+from random import choice
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
 import sqlalchemy as sa
 from app import db
@@ -37,3 +38,17 @@ class SignupForm(FlaskForm):
             raise ValidationError(
                 f"email '{user.email}' already exists. Try a different one"
             )
+
+
+class ParticipantForm(FlaskForm):
+    first_name = StringField("First Name", validators=[DataRequired()])
+    last_name = StringField("Last Name", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email()])
+    gender = SelectField("Gender", choices=[("MALE", "Male"), ("FEMALE", "Female")])
+
+    submit = SubmitField("Create Participant")
+
+
+# class VehicleForm(FlaskForm):
+
+# class PolicyForm(FlaskForm):
