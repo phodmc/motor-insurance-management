@@ -5,7 +5,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 import sqlalchemy as sa
 from app import db
 from app.models import User
-from app.forms import LoginForm, SignupForm
+from app.forms import LoginForm, SignupForm, ParticipantForm
 
 
 @app.route("/")
@@ -55,6 +55,18 @@ def login():
     return render_template("login.html", title="Sign In", form=form)
 
 
+@app.route("/user/<username>")
+@login_required
+def user(username):
+    user = db.first_or_404(sa.select(User).where(User.username == username))
+    posts = [
+        {"author": user, "body": "Test post #1"},
+        {"author": user, "body": "Test post #2"},
+    ]
+
+    return render_template("user.html", user=user, posts=posts)
+
+
 @app.route("/logout")
 def logout():
     logout_user()
@@ -81,3 +93,10 @@ def signup():
         flash("User registration successful!")
         return redirect(url_for("login"))
     return render_template("signup.html", title="Sign Up", form=form)
+
+
+@app.route("/participant", methods=["GET", "POST"])
+@login_required
+def participant():
+    form = ParticipantForm()
+    return render_template("create_participant.html", form=form)
