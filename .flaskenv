@@ -1,1 +1,2 @@
 FLASK_APP=insurance.py
+FLASK_DEBUG=1
