@@ -1,8 +1,18 @@
 from random import choice
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
-from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
+
 import sqlalchemy as sa
+from flask_wtf import FlaskForm
+from wtforms import (
+    BooleanField,
+    IntegerField,
+    PasswordField,
+    SelectField,
+    StringField,
+    SubmitField,
+    TextAreaField,
+)
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+
 from app import db
 from app.models import User
 
@@ -45,7 +55,13 @@ class ParticipantForm(FlaskForm):
     last_name = StringField("Last Name", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired(), Email()])
     gender = SelectField("Gender", choices=[("MALE", "Male"), ("FEMALE", "Female")])
-
+    age = IntegerField("Age", validators=[DataRequired()])
+    phone = StringField("Phone", validators=[DataRequired()])
+    address = TextAreaField("Address", validators=[DataRequired()])
+    nationality = StringField("Nationality", validators=[DataRequired()])
+    occupation = StringField(
+        "Occupation",
+    )
     submit = SubmitField("Create Participant")
 
 
