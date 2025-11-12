@@ -93,4 +93,17 @@
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"
     ></script>
+
+    <script>
+        let cancelBtn = document.getElementById("cancel");
+
+        cancelBtn.addEventListener("click", (e) => {
+            let cancel = confirm(
+                "Are you sure?? Any unsaved data will be lost.",
+            );
+            if (cancel) {
+                window.location.replace("http://127.0.0.1:5000/index");
+            }
+        });
+    </script>
 </html>
