@@ -2,9 +2,15 @@
 <h1>Hello, {{ current_user.first_name.capitalize() }}</h1>
 <br />
 <a href="{{url_for('participant')}}">Create Participant</a>
-{% for vehicle in vehicles %}
-<div>
-    <p><strong>{{ vehicle.owner.name }}</strong></p>
-    <p>{{ vehicle.make }} - {{ vehicle.plate }}</p>
-</div>
-{% endfor %} {% endblock %}
+
+<ul>
+    {% for participant in participants %}
+    <li>
+        <strong
+            >{{ participant.first_name }} {{ participant.last_name }}</strong
+        >
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
