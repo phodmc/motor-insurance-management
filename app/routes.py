@@ -1,30 +1,20 @@
 from urllib.parse import urlsplit
-from app import app
+
+import sqlalchemy as sa
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
-import sqlalchemy as sa
-from app import db
-from app.models import User
-from app.forms import LoginForm, SignupForm, ParticipantForm
+
+from app import app, db
+from app.forms import LoginForm, ParticipantForm, SignupForm
+from app.models import Participant, User
 
 
 @app.route("/")
 @app.route("/index")
 @login_required
 def index():
-    vehicles = [
-        {
-            "owner": {"name": "Foday Sanyang"},
-            "plate": "BJL 7717 Z",
-            "make": "Ford Focus RS",
-        },
-        {
-            "owner": {"name": "Muhammed Drammeh"},
-            "plate": "BJL 8976 D",
-            "make": "Volvo S8",
-        },
-    ]
-    return render_template("index.html", vehicles=vehicles)
+    participants = db.session.scalars(sa.Select(Participant))
+    return render_template("index.html", vehicles=vehicles, participants=participants)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -99,4 +89,22 @@ def signup():
 @login_required
 def participant():
     form = ParticipantForm()
+
+    if form.validate_on_submit():
+        participant = Participant(
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+            email=form.email.data,
+            gender=form.gender.data,
+            age=form.age.data,
+            address=form.address.data,
+            phone=form.phone.data,
+            occupation=form.occupation.data,
+            nationality=form.nationality.data,
+        )
+
+        db.session.add(participant)
+        db.session.commit()
+        flash("Participant created successfully!")
+        return redirect(url_for("index"))
     return render_template("create_participant.html", form=form)
