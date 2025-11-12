@@ -34,6 +34,34 @@
         {% endfor %}
     </p>
 
-    <p>{{form.submit()}}</p>
+    <p>
+        {{form.age.label}} <br />
+        {{form.age()}}
+    </p>
+
+    <p>
+        {{form.address.label}}
+        <br />
+        {{form.address()}}
+    </p>
+
+    <p>
+        {{form.nationality.label}}
+        <br />
+        {{form.nationality()}}
+    </p>
+    <p>
+        {{form.occupation.label}}
+        <br />
+        {{form.occupation()}}
+    </p>
+
+    <p>
+        {{form.phone.label}}
+        <br />
+        {{form.phone()}}
+    </p>
+
+    <p>{{form.submit()}} <input id="cancel" type="button" value="Cancel" /></p>
 </form>
 {% endblock %}
